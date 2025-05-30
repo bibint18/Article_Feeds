@@ -24,12 +24,14 @@ import AppRoutes from './routes';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './redux/store'
+import Navbar from './components/Pages/Navbar';
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router>
+          <Navbar />
           <AppRoutes />
         </Router>
       </PersistGate>

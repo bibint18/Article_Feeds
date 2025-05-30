@@ -63,4 +63,49 @@ export class ArticleRepository implements IArticleRepository {
   async findCategoryByName(name: string): Promise<ICategory | null> {
     return await Category.findOne({name})
   }
+
+  async findMyArticles(
+      userId: string,
+      page: number,
+      limit: number,
+      search: string
+    ): Promise<{ articles: IArticle[], total: number }> {
+      const query: any = { author: userId };
+
+      if (search) {
+        query.$or = [
+          { title: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { tags: { $regex: search, $options: 'i' } },
+        ];
+      }
+
+      const total = await Article.countDocuments(query);
+      const articles = await Article.find(query)
+        .populate('category author')
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+      return { articles, total };
+    }
+
+    async update(
+      articleId: string,
+      userId: string,
+      data: Partial<IArticle>
+    ): Promise<IArticle | null> {
+      return await Article.findOneAndUpdate(
+        { _id: articleId, author: userId },
+        { $set: data },
+        { new: true }
+      ).populate('category author');
+    }
+
+    async delete(articleId: string, userId: string): Promise<void> {
+      const result = await Article.deleteOne({ _id: articleId, author: userId });
+      if (result.deletedCount === 0) {
+        throw new Error('Article not found or unauthorized');
+      }
+    }
 }

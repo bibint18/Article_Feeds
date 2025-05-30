@@ -71,4 +71,60 @@ export class ArticleController implements IArticleController {
       res.status(400).json({ message: error.message });
     }
   }
+
+  async getMyArticles(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        res.status(401).json({ message: 'No token provided' });
+        return;
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+      const { page = 1, limit = 9, search = '' } = req.body;
+      const { articles, total } = await this.articleService.getMyArticles(
+        decoded.userId,
+        Number(page),
+        Number(limit),
+        search
+      );
+      res.status(200).json({ articles, total, page: Number(page), limit: Number(limit) });
+    } catch (error: any) {
+      res.status(401).json({ message: 'Invalid token or error fetching articles' });
+    }
+  }
+
+  async updateArticle(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        res.status(401).json({ message: 'No token provided' });
+        return;
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+      const { id } = req.params;
+      const article = await this.articleService.updateArticle(id, decoded.userId, req.body);
+      res.status(200).json({ message: 'Article updated successfully', article });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  }
+
+  async deleteArticle(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      if (!token) {
+        res.status(401).json({ message: 'No token provided' });
+        return;
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+      const { id } = req.params;
+      await this.articleService.deleteArticle(id, decoded.userId);
+      res.status(200).json({ message: 'Article deleted successfully' });
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  }
 }

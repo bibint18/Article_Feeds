@@ -1,12 +1,14 @@
+
 // import React, { useState, useEffect } from 'react';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { useNavigate } from 'react-router-dom';
 // import { RootState } from '../redux/store';
 // import { clearUser } from '../redux/slices/authSlice';
-// import { getArticles,interactWithArticle } from '../services/api/articleService';
+// import { getArticles } from '../services/api/articleService';
 // import Button from './Shared/Button';
 // import ArticlePopup from './ArticlePopup';
 // import ArticleForm from './ArticleForm';
+
 // interface Article {
 //   _id: string;
 //   title: string;
@@ -44,7 +46,6 @@
 //       try {
 //         setLoading(true);
 //         const response = await getArticles(user.articlePreferences, page, limit, search);
-//         console.log("response get articles",response)
 //         setArticles(response.articles);
 //         setTotal(response.total);
 //       } catch (error) {
@@ -57,20 +58,10 @@
 //     fetchArticles();
 //   }, [user, navigate, page, search,limit]);
 
-//   const handleInteraction = async (articleId: string, action: 'like' | 'dislike' | 'block') => {
-//     try {
-//       const response = await interactWithArticle(articleId, action);
-//       setArticles((prev) =>
-//         prev.map((article) =>
-//           article._id === articleId ? { ...article, ...response.article } : article
-//         )
-//       );
-//       if (action === 'block') {
-//         setSelectedArticle(null);
-//       }
-//     } catch (error) {
-//       console.error(`Error performing ${action}:`, error);
-//     }
+//   const handleInteraction = (updatedArticle: Article) => {
+//     setArticles((prev) =>
+//       prev.map((article) => (article._id === updatedArticle._id ? updatedArticle : article)).filter((article) => !updatedArticle.blocked.includes(user?._id || ''))
+//     );
 //   };
 
 //   const handlePageChange = (newPage: number) => {
@@ -177,7 +168,6 @@
 //         {selectedArticle && (
 //           <ArticlePopup
 //             article={selectedArticle}
-//             userId={user?._id || ''}
 //             onClose={() => setSelectedArticle(null)}
 //             onInteraction={handleInteraction}
 //           />
@@ -204,13 +194,10 @@
 
 
 
-
-
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
-import { clearUser } from '../redux/slices/authSlice';
 import { getArticles } from '../services/api/articleService';
 import Button from './Shared/Button';
 import ArticlePopup from './ArticlePopup';
@@ -231,7 +218,6 @@ interface Article {
 }
 
 const Dashboard: React.FC = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
   const [articles, setArticles] = useState<Article[]>([]);
@@ -282,42 +268,26 @@ const Dashboard: React.FC = () => {
     setPage(1);
   };
 
-  const handleLogout = () => {
-    dispatch(clearUser());
-    navigate('/login');
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-800">
-            Welcome, {user?.firstName} {user?.lastName}
-          </h1>
+        <div className="mb-6 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-gray-700">Your Articles</h2>
           <div className="flex space-x-4">
+            <input
+              type="text"
+              value={search}
+              onChange={handleSearch}
+              placeholder="Search articles..."
+              className="w-64 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             <Button
               onClick={() => setShowArticleForm(true)}
               className="bg-green-600 hover:bg-green-700 transition-colors duration-300"
             >
               Create Article
             </Button>
-            <Button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 transition-colors duration-300"
-            >
-              Logout
-            </Button>
           </div>
-        </div>
-        <div className="mb-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-700">Your Articles</h2>
-          <input
-            type="text"
-            value={search}
-            onChange={handleSearch}
-            placeholder="Search articles..."
-            className="w-64 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
         </div>
         {loading ? (
           <p className="text-gray-600 text-center">Loading articles...</p>

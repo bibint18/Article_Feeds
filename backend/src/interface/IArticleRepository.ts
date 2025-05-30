@@ -16,4 +16,16 @@ export interface IArticleRepository {
     action: 'like' | 'dislike' | 'block'
   ): Promise<IArticle | null>;
   findCategoryByName(name:string):Promise<ICategory | null>
+  findMyArticles(
+    userId: string,
+    page: number,
+    limit: number,
+    search: string
+  ): Promise<{ articles: IArticle[]; total: number }>;
+  update(
+    articleId: string,
+    userId: string,
+    data: Partial<IArticle>
+  ): Promise<IArticle | null>;
+  delete(articleId: string, userId: string): Promise<void>;
 }

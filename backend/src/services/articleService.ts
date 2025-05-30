@@ -54,4 +54,41 @@ export class ArticleService implements IArticleService {
     }
     return article;
   }
+
+  async getMyArticles(
+      userId: string,
+      page: number,
+      limit: number,
+      search: string
+    ): Promise<{ articles: IArticle[], total: number }> {
+      return await this.repository.findMyArticles(userId, page, limit, search);
+    }
+
+    async updateArticle(
+      articleId: string,
+      userId: string,
+      data: { title: string; description: string; image?: string; tags: string[], category: string }
+    ): Promise<IArticle> {
+      const category = await this.repository.findCategoryByName(data.category);
+      if (!category) {
+        throw new Error('Category not found');
+      }
+      const articleData: Partial<IArticle> = {
+        title: data.title,
+        description: data.description,
+        imageUrl: data.image,
+        tags: data.tags,
+        category: category._id,
+      };
+      const article = await this.repository.update(articleId, userId, articleData);
+      if (!article) {
+        throw new Error('Article not found or unauthorized');
+      }
+      return article;
+    }
+
+    async deleteArticle(articleId: string, userId: string): Promise<void> {
+      return await this.repository.delete(articleId, userId);
+    }
+    
 }
