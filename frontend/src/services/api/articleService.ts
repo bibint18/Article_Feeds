@@ -26,3 +26,4 @@ export const interactWithArticle = async (articleId: string, action: 'like' | 'd
   const response = await axiosInstance.post('/articles/interact', { articleId, action });
   return response.data;
 };
+
