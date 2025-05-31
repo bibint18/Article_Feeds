@@ -1,11 +1,11 @@
 
-
 // import React, { useState, useEffect } from 'react';
 // import { getUserProfile, updateUserProfile, getCategories } from '../services/api/userService';
 // import InputField from './Shared/InputField';
 // import Button from './Shared/Button';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RootState } from '../redux/store';
+// import { setUser } from '../redux/slices/authSlice'; // Import the setUser action
 
 // interface Category {
 //   _id: string;
@@ -23,6 +23,9 @@
 // }
 
 // const SettingsPage: React.FC = () => {
+//   const dispatch = useDispatch();
+//   const {  accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
+
 //   const [profile, setProfile] = useState<UserProfile>({
 //     firstName: '',
 //     lastName: '',
@@ -134,6 +137,21 @@
 //         ...updatedUser,
 //         dob: updatedUser.dob.split('T')[0],
 //       });
+
+//       // Update Redux store with the new user details
+//       dispatch(
+//         setUser({
+//           user: {
+//             firstName: updatedUser.firstName,
+//             lastName: updatedUser.lastName,
+//             email: updatedUser.email,
+//             articlePreferences: updatedUser.articlePreferences.map((cat) => cat._id), // Map to array of _id strings
+//           },
+//           accessToken, // Preserve existing accessToken
+//           refreshToken, // Preserve existing refreshToken
+//         })
+//       );
+
 //       setSuccess('Profile updated successfully');
 //       setIsEditing(false);
 //       setTimeout(() => setSuccess(''), 3000);
@@ -307,13 +325,14 @@
 
 
 
+
 import React, { useState, useEffect } from 'react';
 import { getUserProfile, updateUserProfile, getCategories } from '../services/api/userService';
 import InputField from './Shared/InputField';
 import Button from './Shared/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { setUser } from '../redux/slices/authSlice'; // Import the setUser action
+import { setUser } from '../redux/slices/authSlice';
 
 interface Category {
   _id: string;
@@ -473,22 +492,12 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+    <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div
-        className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto my-4 sm:my-8 relative"
-        role="dialog"
-        aria-label="Settings"
+        className="bg-white p-6 rounded-2xl shadow-xl max-w-lg mx-auto"
+        role="main"
+        aria-label="Settings Page"
       >
-        <button
-          onClick={() => window.history.back()}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
-          aria-label="Close settings"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">Settings</h1>
         {success && (
           <div className="bg-green-100 text-green-700 p-3 rounded-lg mb-4 text-center">

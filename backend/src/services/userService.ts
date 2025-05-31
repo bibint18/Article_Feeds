@@ -1,6 +1,6 @@
 
 import { UserRepository } from '../repositories/userRepository';
-import { IUserRepository, IUserProfile, IProfileUpdateData, IUserService } from '../interface/IUser';
+import { IUserRepository, IUserProfile, IProfileUpdateData, IUserService, IPasswordResetData } from '../interface/IUser';
 import { ICategory } from '../interface/ICategory';
 
 export class UserService implements IUserService {
@@ -24,5 +24,9 @@ export class UserService implements IUserService {
 
   async getCatogories():Promise<ICategory[]>{
     return await this.userRepository.getCatgories()
+  }
+
+  async resetPassword(id: string, data: IPasswordResetData): Promise<void> {
+    await this.userRepository.resetPassword(id, data);
   }
 }

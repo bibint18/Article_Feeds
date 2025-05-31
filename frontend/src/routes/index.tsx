@@ -6,6 +6,7 @@ import LoginForm from '../components/LoginForm';
 import Dashboard from '../components/Dashboard';
 import MyArticles from '../components/MyArtcles';
 import SettingsPage from '../components/SettingsPage';
+import ResetPassword from '../components/ResetPassword';
 // import Dashboard from '../components/Dashboard';
 
 const AppRoutes: React.FC = () => {
@@ -16,7 +17,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<LoginForm />} />
       <Route path="/dashboard" element={<Dashboard/>} />
       <Route path="/my-articles" element={<MyArticles />} />
-      <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/settings" element={<ResetPassword />} />
+      <Route path='/profile' element={<SettingsPage/>} />
 
       <Route path="/success" element={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-gray-100">
         <div className="bg-white p-10 rounded-2xl shadow-xl text-center">

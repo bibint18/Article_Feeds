@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
-import { IUserController, IProfileUpdateData } from '../interface/IUser'
+import { IUserController, IProfileUpdateData, IPasswordResetData } from '../interface/IUser'
 
 interface AuthRequest extends Request {
   user?: { id: string };
@@ -41,6 +41,17 @@ export class UserController implements IUserController {
       res.json(categories)
     } catch (error:any) {
       res.status(500).json({ message: error.message });
+    }
+  }
+
+  async resetPassword(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      console.log("reached controller reset")
+      const data: IPasswordResetData = req.body;
+      await this.userService.resetPassword(req.user?.id || '', data);
+      res.json({ message: 'Password updated successfully' });
+    } catch (error: any) {
+      res.status(error.message.includes('incorrect') ? 401 : 500).json({ message: error.message });
     }
   }
 }
