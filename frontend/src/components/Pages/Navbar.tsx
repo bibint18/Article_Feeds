@@ -36,6 +36,16 @@ const Navbar: React.FC = () => {
             >
               My Articles
             </NavLink>
+
+                        <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                `hover:text-gray-200 transition-colors duration-200 ${isActive ? 'font-bold underline' : ''}`
+              }
+            >
+              Settings
+            </NavLink>
+
             <button
               onClick={handleLogout}
               className="hover:text-gray-200 transition-colors duration-200"

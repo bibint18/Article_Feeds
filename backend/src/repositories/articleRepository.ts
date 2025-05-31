@@ -12,7 +12,7 @@ export class ArticleRepository implements IArticleRepository {
     limit: number,
     search: string
   ): Promise<{ articles: IArticle[]; total: number }> {
-    console.log('get repo',preferences)
+    console.log('get repo0000000000',preferences)
     const query: any = {
       category: { $in: preferences },
       blocked: { $nin: [userId] },
