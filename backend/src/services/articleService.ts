@@ -30,6 +30,7 @@ export class ArticleService implements IArticleService {
     //   imageUrl = await uploadImage(data.image);
     // }
     const category = await this.repository.findCategoryByName(data.category)
+    console.log("category from service",category)
     const articleData: Partial<IArticle> = {
       title: data.title,
       description: data.description,
