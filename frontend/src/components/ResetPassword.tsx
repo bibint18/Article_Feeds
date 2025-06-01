@@ -1,8 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../services/axiosInstance';// Assuming axiosInstance is used for API calls
 import InputField from './Shared/InputField';
 import Button from './Shared/Button';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 interface PasswordErrors {
   currentPassword: string;
@@ -11,6 +14,8 @@ interface PasswordErrors {
 }
 
 const ResetPassword: React.FC = () => {
+  const navigate = useNavigate()
+  const {user} = useSelector((state:RootState) => state.auth)
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -22,6 +27,11 @@ const ResetPassword: React.FC = () => {
     confirmPassword: '',
   });
   const [success, setSuccess] = useState('');
+  useEffect(() => {
+    if(!user){
+      navigate('/login')
+    }
+  },[navigate,user])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

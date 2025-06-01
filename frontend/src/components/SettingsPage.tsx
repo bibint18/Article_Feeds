@@ -333,6 +333,7 @@ import Button from './Shared/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { setUser } from '../redux/slices/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface Category {
   _id: string;
@@ -351,7 +352,7 @@ interface UserProfile {
 
 const SettingsPage: React.FC = () => {
   const dispatch = useDispatch();
-  const {  accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
+  const { user, accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
 
   const [profile, setProfile] = useState<UserProfile>({
     firstName: '',
@@ -377,8 +378,11 @@ const SettingsPage: React.FC = () => {
     articlePreferences: '',
   });
   const [success, setSuccess] = useState('');
-
+  const navigate = useNavigate()
   useEffect(() => {
+    if(!user){
+      navigate('/login')
+    }
     const fetchData = async () => {
       try {
         const [user, cats] = await Promise.all([getUserProfile(), getCategories()]);
@@ -403,7 +407,7 @@ const SettingsPage: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [navigate,user]);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);

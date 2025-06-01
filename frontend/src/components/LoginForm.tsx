@@ -1,15 +1,24 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import InputField from './Shared/InputField';
 import Button from './Shared/Button';
 import { loginUser } from '../services/api/authService';
 import { validateLoginForm } from '../utils/validateLoginForm';
 import { setUser } from '../redux/slices/authSlice';
 import { LoginFormData } from '../types';
+import { RootState } from '../redux/store';
 
 const LoginForm: React.FC = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+  const {user} = useSelector((state:RootState) => state.auth)
+  console.log(user)
+  useEffect(() => {
+    if(user){
+    navigate('/')
+  }
+  },[navigate,user])
+  
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -40,7 +49,7 @@ const LoginForm: React.FC = () => {
       const { user, accessToken, refreshToken } = await loginUser(formData);
       console.log("respomse",user,accessToken,refreshToken)
       dispatch(setUser({ user, accessToken, refreshToken }));
-      navigate('/dashboard');
+      navigate('/');
     } catch (err: any) {
       console.log(err)
       setErrors({
@@ -79,8 +88,9 @@ const LoginForm: React.FC = () => {
             Log In
           </Button>
         </form>
-        <p className="text-center text-gray-600 mt-6 text-sm">
-          Don't have an account? <a href="/" className="text-blue-600 hover:underline">Sign Up</a>
+        <p className="text-center text-gray-600 mt-6 text-sm" onClick={() => navigate('/signup')}>
+          Don't have an account? Signup
+          {/* <a href="/signup" className="text-blue-600 hover:underline">Sign Up</a> */}
         </p>
       </div>
     </div>

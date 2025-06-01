@@ -6,7 +6,7 @@ import { getMyArticles, deleteArticle } from '../services/api/articleService';
 import Button from './Shared/Button';
 import ArticleForm from './ArticleForm';
 import Swal from 'sweetalert2';
-
+import Pagination from './Pages/Pagination';
 interface Article {
   _id: string;
   title: string;
@@ -27,16 +27,12 @@ const MyArticles: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [limit] = useState(9);
+  const [limit] = useState(6);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [editArticle, setEditArticle] = useState<Article | null>(null);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
 
     const fetchArticles = async () => {
       try {
@@ -54,11 +50,11 @@ const MyArticles: React.FC = () => {
     fetchArticles();
   }, [user, navigate, page, search,limit]);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= Math.ceil(total / limit)) {
-      setPage(newPage);
-    }
-  };
+  // const handlePageChange = (newPage: number) => {
+  //   if (newPage >= 1 && newPage <= Math.ceil(total / limit)) {
+  //     setPage(newPage);
+  //   }
+  // };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -150,7 +146,11 @@ const MyArticles: React.FC = () => {
             ))}
           </div>
         )}
-        {total > limit && (
+
+        <Pagination currentPage={page} totalItems={total} itemsPerPage={limit} onPageChange={setPage}
+        />
+
+        {/* {total > limit && (
           <div className="flex justify-center mt-8 space-x-4">
             <Button
               onClick={() => handlePageChange(page - 1)}
@@ -170,7 +170,7 @@ const MyArticles: React.FC = () => {
               Next
             </Button>
           </div>
-        )}
+        )} */}
         {editArticle && (
           <ArticleForm
             onClose={() => setEditArticle(null)}

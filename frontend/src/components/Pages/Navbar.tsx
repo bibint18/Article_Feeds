@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
         {user && (
           <div className="flex space-x-6 items-center">
             <NavLink
-              to="/dashboard"
+              to="/"
               className={({ isActive }) =>
                 `hover:text-gray-200 transition-colors duration-200 ${
                   isActive ? "font-bold underline" : ""
