@@ -124,7 +124,7 @@ export class AuthService implements IAuthService {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        articlePreferences: user.articlePreferences.map((id) => id.toString()),
+        articlePreferences: user.articlePreferences.map((id:any) => id.toString()),
       },
       accessToken,
       refreshToken,

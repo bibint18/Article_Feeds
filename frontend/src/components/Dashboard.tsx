@@ -236,7 +236,7 @@ const Dashboard: React.FC = () => {
     setArticles((prev) =>
       prev
         .map((article) => (article._id === updatedArticle._id ? updatedArticle : article))
-        .filter((article) => !updatedArticle.blocked.includes(user?._id || ''))
+        .filter(() => !updatedArticle.blocked.includes(user?._id || ''))
     );
   };
 

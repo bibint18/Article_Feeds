@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import InputField from './Shared/InputField';
@@ -48,7 +48,13 @@ const LoginForm: React.FC = () => {
     try {
       const { user, accessToken, refreshToken } = await loginUser(formData);
       console.log("respomse",user,accessToken,refreshToken)
-      dispatch(setUser({ user, accessToken, refreshToken }));
+      dispatch(setUser({ user: {
+            _id: user._id, 
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            articlePreferences: user.articlePreferences || [],
+          }, accessToken, refreshToken }));
       navigate('/');
     } catch (err: any) {
       console.log(err)

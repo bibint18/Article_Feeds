@@ -5,7 +5,8 @@
 // import Button from './Shared/Button';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RootState } from '../redux/store';
-// import { setUser } from '../redux/slices/authSlice'; // Import the setUser action
+// import { setUser } from '../redux/slices/authSlice';
+// import { useNavigate } from 'react-router-dom';
 
 // interface Category {
 //   _id: string;
@@ -14,6 +15,7 @@
 // }
 
 // interface UserProfile {
+//   _id: string;
 //   firstName: string;
 //   lastName: string;
 //   phone: string;
@@ -24,9 +26,10 @@
 
 // const SettingsPage: React.FC = () => {
 //   const dispatch = useDispatch();
-//   const {  accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
+//   const { user, accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
 
 //   const [profile, setProfile] = useState<UserProfile>({
+//     _id:'',
 //     firstName: '',
 //     lastName: '',
 //     phone: '',
@@ -50,8 +53,11 @@
 //     articlePreferences: '',
 //   });
 //   const [success, setSuccess] = useState('');
-
+//   const navigate = useNavigate()
 //   useEffect(() => {
+//     if(!user){
+//       navigate('/login')
+//     }
 //     const fetchData = async () => {
 //       try {
 //         const [user, cats] = await Promise.all([getUserProfile(), getCategories()]);
@@ -76,7 +82,7 @@
 //       }
 //     };
 //     fetchData();
-//   }, []);
+//   }, [navigate,user]);
 
 //   const handleEditToggle = () => {
 //     setIsEditing(!isEditing);
@@ -165,22 +171,12 @@
 //   };
 
 //   return (
-//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 p-4 overflow-y-auto">
+//     <div className="min-h-screen bg-gray-100 py-8 px-4">
 //       <div
-//         className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto my-4 sm:my-8 relative"
-//         role="dialog"
-//         aria-label="Settings"
+//         className="bg-white p-6 rounded-2xl shadow-xl max-w-lg mx-auto"
+//         role="main"
+//         aria-label="Settings Page"
 //       >
-//         <button
-//           onClick={() => window.history.back()}
-//           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200"
-//           aria-label="Close settings"
-//         >
-//           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-//           </svg>
-//         </button>
-
 //         <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">Settings</h1>
 //         {success && (
 //           <div className="bg-green-100 text-green-700 p-3 rounded-lg mb-4 text-center">
@@ -324,8 +320,6 @@
 
 
 
-
-
 import React, { useState, useEffect } from 'react';
 import { getUserProfile, updateUserProfile, getCategories } from '../services/api/userService';
 import InputField from './Shared/InputField';
@@ -342,6 +336,7 @@ interface Category {
 }
 
 interface UserProfile {
+  _id: string; // Add _id to UserProfile
   firstName: string;
   lastName: string;
   phone: string;
@@ -353,8 +348,10 @@ interface UserProfile {
 const SettingsPage: React.FC = () => {
   const dispatch = useDispatch();
   const { user, accessToken, refreshToken } = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
 
   const [profile, setProfile] = useState<UserProfile>({
+    _id: '',
     firstName: '',
     lastName: '',
     phone: '',
@@ -367,7 +364,7 @@ const SettingsPage: React.FC = () => {
     firstName: '',
     lastName: '',
     dob: '',
-    articlePreferences: [] as string[], // Stores _id strings for editing
+    articlePreferences: [] as string[],
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -378,24 +375,28 @@ const SettingsPage: React.FC = () => {
     articlePreferences: '',
   });
   const [success, setSuccess] = useState('');
-  const navigate = useNavigate()
+
   useEffect(() => {
-    if(!user){
-      navigate('/login')
+    if (!user) {
+      navigate('/login');
     }
     const fetchData = async () => {
       try {
-        const [user, cats] = await Promise.all([getUserProfile(), getCategories()]);
-        console.log("catag", user);
+        const [userData, cats] = await Promise.all([getUserProfile(), getCategories()]);
         setProfile({
-          ...user,
-          dob: user.dob.split('T')[0], // Format for display
+          _id: userData._id,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          phone: userData.phone,
+          email: userData.email,
+          dob: userData.dob.split('T')[0],
+          articlePreferences: userData.articlePreferences,
         });
         setEditProfile({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          dob: user.dob.split('T')[0], // Format for input
-          articlePreferences: user.articlePreferences.map((cat) => cat._id), // Extract _id strings
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          dob: userData.dob.split('T')[0],
+          articlePreferences: userData.articlePreferences.map((cat: Category) => cat._id),
         });
         setCategories(cats);
       } catch (error: any) {
@@ -407,7 +408,7 @@ const SettingsPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [navigate,user]);
+  }, [navigate, user]);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -462,24 +463,28 @@ const SettingsPage: React.FC = () => {
         dob: editProfile.dob,
         articlePreferences: editProfile.articlePreferences,
       });
-      // Fetch updated profile to get populated articlePreferences
       const updatedUser = await getUserProfile();
       setProfile({
-        ...updatedUser,
+        _id: updatedUser._id, // Store _id
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        phone: updatedUser.phone,
+        email: updatedUser.email,
         dob: updatedUser.dob.split('T')[0],
+        articlePreferences: updatedUser.articlePreferences,
       });
 
-      // Update Redux store with the new user details
       dispatch(
         setUser({
           user: {
+            _id: updatedUser._id, // Include _id
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             email: updatedUser.email,
-            articlePreferences: updatedUser.articlePreferences.map((cat) => cat._id), // Map to array of _id strings
+            articlePreferences: updatedUser.articlePreferences.map((cat: Category) => cat._id),
           },
-          accessToken, // Preserve existing accessToken
-          refreshToken, // Preserve existing refreshToken
+          accessToken,
+          refreshToken,
         })
       );
 
@@ -509,7 +514,6 @@ const SettingsPage: React.FC = () => {
           </div>
         )}
 
-        {/* Display User Details */}
         {!isEditing ? (
           <div className="space-y-4">
             <div>
@@ -538,7 +542,7 @@ const SettingsPage: React.FC = () => {
                 {profile.articlePreferences.length > 0 ? (
                   profile.articlePreferences.map((categoryObj) => (
                     <span
-                      key={categoryObj._id} // Use _id as the key
+                      key={categoryObj._id}
                       className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-md"
                     >
                       {categoryObj.name || 'Unknown'}
@@ -559,7 +563,6 @@ const SettingsPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          /* Edit Form */
           <form onSubmit={handleProfileSubmit} className="space-y-4">
             <InputField
               label="First Name"

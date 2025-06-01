@@ -1,6 +1,7 @@
 import axiosInstance from "../axiosInstance";
 
 interface UserProfile {
+  _id:string
   firstName: string;
   lastName: string;
   phone: string;
