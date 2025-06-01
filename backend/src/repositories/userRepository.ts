@@ -23,16 +23,13 @@ export class UserRepository implements IUserRepository {
   async resetPassword(id: string, data: IPasswordResetData): Promise<void> {
     const user = await User.findById(id);
     if (!user) throw new Error('User not found');
-
-    // Verify current password
     const isMatch = await bcrypt.compare(data.currentPassword, user.password);
-    if (!isMatch) throw new Error('Current password is incorrect') && console.log('incorrect');
-
-    // Hash the new password
+    if (!isMatch){
+      throw new Error('Current password is incorrect')
+       console.log('incorrect');
+    } 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.newPassword, salt);
-
-    // Update the password
     user.password = hashedPassword;
     await user.save();
   }

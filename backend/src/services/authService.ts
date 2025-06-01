@@ -99,7 +99,7 @@ export class AuthService implements IAuthService {
     const { email, password } = data;
     const user = await this.repository.findUserByEmail(email);
     if (!user) {
-      throw new Error('Invalid email or password');
+      throw new Error('No user exist!');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);

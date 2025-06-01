@@ -51,7 +51,8 @@ export class UserController implements IUserController {
       await this.userService.resetPassword(req.user?.id || '', data);
       res.json({ message: 'Password updated successfully' });
     } catch (error: any) {
-      res.status(error.message.includes('incorrect') ? 401 : 500).json({ message: error.message });
+      // res.status(error.message.includes('incorrect') ? 401 : 500).json({ message: error.message });
+      res.status(500).json({message:error.message})
     }
   }
 }

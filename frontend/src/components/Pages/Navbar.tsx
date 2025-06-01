@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, NavLink } from 'react-router-dom';
-import { RootState } from '../../redux/store';
-import { clearUser } from '../../redux/slices/authSlice';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, NavLink } from "react-router-dom";
+import { RootState } from "../../redux/store";
+import { clearUser } from "../../redux/slices/authSlice";
 
 const Navbar: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearUser());
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -23,24 +23,40 @@ const Navbar: React.FC = () => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                `hover:text-gray-200 transition-colors duration-200 ${isActive ? 'font-bold underline' : ''}`
+                `hover:text-gray-200 transition-colors duration-200 ${
+                  isActive ? "font-bold underline" : ""
+                }`
               }
             >
               Dashboard
             </NavLink>
             <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                `hover:text-gray-200 transition-colors duration-200 ${
+                  isActive ? "font-bold underline" : ""
+                }`
+              }
+            >
+             Profile
+            </NavLink>
+            <NavLink
               to="/my-articles"
               className={({ isActive }) =>
-                `hover:text-gray-200 transition-colors duration-200 ${isActive ? 'font-bold underline' : ''}`
+                `hover:text-gray-200 transition-colors duration-200 ${
+                  isActive ? "font-bold underline" : ""
+                }`
               }
             >
               My Articles
             </NavLink>
 
-                        <NavLink
+            <NavLink
               to="/settings"
               className={({ isActive }) =>
-                `hover:text-gray-200 transition-colors duration-200 ${isActive ? 'font-bold underline' : ''}`
+                `hover:text-gray-200 transition-colors duration-200 ${
+                  isActive ? "font-bold underline" : ""
+                }`
               }
             >
               Settings

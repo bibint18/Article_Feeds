@@ -1,8 +1,10 @@
-import { Request, Response } from 'express';
-import { IArticleController } from '../interface/IArticleController';
-import { ArticleService } from '../services/articleService';
-import jwt from 'jsonwebtoken';
+import { Request, Response } from "express";
+import { IArticleController } from "../interface/IArticleController";
+import { ArticleService } from "../services/articleService";
 
+interface AuthRequest extends Request {
+  user?: { id: string };
+}
 export class ArticleController implements IArticleController {
   private articleService: ArticleService;
 
@@ -10,119 +12,100 @@ export class ArticleController implements IArticleController {
     this.articleService = new ArticleService();
   }
 
-  async getArticles(req: Request, res: Response): Promise<void> {
+  async getArticles(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (!token) {
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
-      const { preferences, page = 1, limit = 9, search = '' } = req.body;
-      console.log(preferences,page,limit,search,'backend get articles')
-      const { articles, total } = await this.articleService.getArticlesByPreferences(
-        decoded.userId,
-        preferences,
-        Number(page),
-        Number(limit),
-        search
-      );
-      res.status(200).json({ articles, total, page: Number(page), limit: Number(limit) });
+      const userId = req.user?.id as string;
+      const { preferences, page = 1, limit = 9, search = "" } = req.body;
+      console.log(preferences, page, limit, search, "backend get articles");
+      const { articles, total } =
+        await this.articleService.getArticlesByPreferences(
+          userId,
+          preferences,
+          Number(page),
+          Number(limit),
+          search
+        );
+      res
+        .status(200)
+        .json({ articles, total, page: Number(page), limit: Number(limit) });
     } catch (error: any) {
-      res.status(401).json({ message: 'Invalid token or error fetching articles' });
+      res
+        .status(401)
+        .json({ message: "Invalid token or error fetching articles" });
     }
   }
 
-  async createArticle(req: Request, res: Response): Promise<void> {
+  async createArticle(req: AuthRequest, res: Response): Promise<void> {
     try {
-      console.log("reached jere")
-      const token = req.headers.authorization?.split(' ')[1];
-      console.log(token)
-      if (!token) {
-        console.log(true)
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
-      console.log("decode",decoded)
-      const article = await this.articleService.createArticle(decoded.userId, req.body);
-      console.log(article)
-      res.status(201).json({ message: 'Article created successfully', article });
+      const userId = req.user?.id as string;
+      const article = await this.articleService.createArticle(userId, req.body);
+      console.log(article);
+      res
+        .status(201)
+        .json({ message: "Article created successfully", article });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
   }
 
-  async interactWithArticle(req: Request, res: Response): Promise<void> {
+  async interactWithArticle(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (!token) {
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+const userId=req.user?.id as string
       const { articleId, action } = req.body;
-      const article = await this.articleService.interactWithArticle(articleId, decoded.userId, action);
+      const article = await this.articleService.interactWithArticle(
+        articleId,
+        userId,
+        action
+      );
       res.status(200).json({ message: `${action} successful`, article });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
   }
 
-  async getMyArticles(req: Request, res: Response): Promise<void> {
+  async getMyArticles(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (!token) {
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
-      const { page = 1, limit = 9, search = '' } = req.body;
+const userId=req.user?.id as string
+      const { page = 1, limit = 9, search = "" } = req.body;
       const { articles, total } = await this.articleService.getMyArticles(
-        decoded.userId,
+        userId,
         Number(page),
         Number(limit),
         search
       );
-      res.status(200).json({ articles, total, page: Number(page), limit: Number(limit) });
+      res
+        .status(200)
+        .json({ articles, total, page: Number(page), limit: Number(limit) });
     } catch (error: any) {
-      res.status(401).json({ message: 'Invalid token or error fetching articles' });
+      res
+        .status(401)
+        .json({ message: "Invalid token or error fetching articles" });
     }
   }
 
-  async updateArticle(req: Request, res: Response): Promise<void> {
+  async updateArticle(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (!token) {
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+const userId=req.user?.id as string
       const { id } = req.params;
-      const article = await this.articleService.updateArticle(id, decoded.userId, req.body);
-      res.status(200).json({ message: 'Article updated successfully', article });
+      const article = await this.articleService.updateArticle(
+        id,
+        userId,
+        req.body
+      );
+      res
+        .status(200)
+        .json({ message: "Article updated successfully", article });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }
   }
 
-  async deleteArticle(req: Request, res: Response): Promise<void> {
+  async deleteArticle(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      if (!token) {
-        res.status(401).json({ message: 'No token provided' });
-        return;
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'access-secret') as { userId: string; email: string };
+const userId=req.user?.id as string
       const { id } = req.params;
-      await this.articleService.deleteArticle(id, decoded.userId);
-      res.status(200).json({ message: 'Article deleted successfully' });
+      await this.articleService.deleteArticle(id, userId);
+      res.status(200).json({ message: "Article deleted successfully" });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
     }

@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { ArticleController } from '../controllers/articleController';
-
+import authMiddleware from '../middleware/authMiddleware';
 const router = Router();
 const articleController = new ArticleController();
 
-router.post('/', articleController.getArticles.bind(articleController));
-router.post('/create', articleController.createArticle.bind(articleController));
-router.post('/interact', articleController.interactWithArticle.bind(articleController));
-router.post('/my-articles', articleController.getMyArticles.bind(articleController));
-router.put('/:id', articleController.updateArticle.bind(articleController));
-router.delete('/:id', articleController.deleteArticle.bind(articleController));
+router.post('/',authMiddleware, articleController.getArticles.bind(articleController));
+router.post('/create',authMiddleware, articleController.createArticle.bind(articleController));
+router.post('/interact',authMiddleware, articleController.interactWithArticle.bind(articleController));
+router.post('/my-articles',authMiddleware, articleController.getMyArticles.bind(articleController));
+router.put('/:id',authMiddleware, articleController.updateArticle.bind(articleController));
+router.delete('/:id',authMiddleware, articleController.deleteArticle.bind(articleController));
 
 export default router;

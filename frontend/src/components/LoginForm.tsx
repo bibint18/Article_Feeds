@@ -36,18 +36,13 @@ const LoginForm: React.FC = () => {
       setErrors(validationErrors);
       return;
     }
-    // if (Object.keys(validationErrors).length > 0) {
-    //   console.log(Object.keys(validationErrors).length > 0)
-    //   setErrors(validationErrors);
-    //   return;
-    // }
-
     try {
       const { user, accessToken, refreshToken } = await loginUser(formData);
       console.log("respomse",user,accessToken,refreshToken)
       dispatch(setUser({ user, accessToken, refreshToken }));
       navigate('/dashboard');
     } catch (err: any) {
+      console.log(err)
       setErrors({
         email: undefined,
         password: err.response?.data?.message || 'Login failed',
