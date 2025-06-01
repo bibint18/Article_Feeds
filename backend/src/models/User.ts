@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ICategory } from './Category';
+import { ICategory } from './Category.js';
 
 export interface IUser extends Document {
   firstName: string;

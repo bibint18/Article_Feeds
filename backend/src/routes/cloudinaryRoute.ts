@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { CloudinaryController } from '../controllers/cloudinaryController';
+import { CloudinaryController } from '../controllers/cloudinaryController.js';
 
 const router = Router();
 const cloudinaryController = new CloudinaryController();

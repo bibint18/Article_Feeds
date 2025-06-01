@@ -1,8 +1,7 @@
-import { IArticleRepository } from '../interface/IArticleRepository';
-import { ICategory } from '../interface/ICategory';
-import Article, { IArticle } from '../models/Article';
-import mongoose from 'mongoose';
-import Category from '../models/Category';
+import { IArticleRepository } from '../interface/IArticleRepository.js';
+import { ICategory } from '../interface/ICategory.js';
+import Article, { IArticle } from '../models/Article.js';
+import Category from '../models/Category.js';
 
 export class ArticleRepository implements IArticleRepository {
   async findByUserPreferences(

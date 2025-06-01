@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { ICategory } from './Category';
-import { IUser } from './User';
+import { ICategory } from './Category.js';
+import { IUser } from './User.js';
 export interface IArticle extends Document {
   title: string;
   description: string;

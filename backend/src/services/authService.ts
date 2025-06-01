@@ -1,11 +1,11 @@
-import { IAuthService,LoginRequest,RegisterRequest } from '../interface/IAuthService';
-import { IAuthRepository } from '../interface/IAuthRepository';
-import { AuthRepository } from '../repositories/authRepository';
-import { generateOtp, sendOtpEmail } from '../utils/otpGenerator';
-// import { ICategory } from '../interfaces/ICategory';
+import { IAuthService,LoginRequest,RegisterRequest } from '../interface/IAuthService.js';
+import { IAuthRepository } from '../interface/IAuthRepository.js';
+import { AuthRepository } from '../repositories/authRepository.js';
+import { generateOtp, sendOtpEmail } from '../utils/otpGenerator.js';
+// import { ICategory } from '../interfaces/ICategory.js';
 import bcrypt from 'bcryptjs';
-import Category from '../models/Category';
-import { IUser } from '../interface/IUser';
+import Category from '../models/Category.js';
+import { IUser } from '../interface/IUser.js';
 import jwt from 'jsonwebtoken';
 interface OtpData {
   [email: string]: { otp: string; timestamp: number; userData: RegisterRequest };

@@ -1,8 +1,7 @@
-import { IArticleService } from '../interface/IArticleService';
-import { IArticleRepository } from '../interface/IArticleRepository';
-import { ArticleRepository } from '../repositories/articleRepository';
-import { IArticle } from '../models/Article';
-import { uploadImage } from './cloudinary';
+import { IArticleService } from '../interface/IArticleService.js';
+import { IArticleRepository } from '../interface/IArticleRepository.js';
+import { ArticleRepository } from '../repositories/articleRepository.js';
+import { IArticle } from '../models/Article.js';
 
 export class ArticleService implements IArticleService {
   private repository: IArticleRepository;

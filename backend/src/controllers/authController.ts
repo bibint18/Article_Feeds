@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { IAuthController } from '../interface/IAuthController';
-import { AuthService } from '../services/authService';
+import { IAuthController } from '../interface/IAuthController.js';
+import { AuthService } from '../services/authService.js';
 
 export class AuthController implements IAuthController {
   private authService: AuthService;

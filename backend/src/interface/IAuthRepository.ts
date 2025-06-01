@@ -1,5 +1,5 @@
-import { IUser } from './IUser';
-import { ICategory } from './ICategory';
+import { IUser } from './IUser.js';
+import { ICategory } from './ICategory.js';
 
 export interface IAuthRepository {
   findCategoryByName(name: string): Promise<ICategory | null>;

@@ -1,4 +1,4 @@
-import { IArticle } from "../models/Article";
+import { IArticle } from "../models/Article.js";
 export interface IArticleService {
   getArticlesByPreferences(
     userId: string,

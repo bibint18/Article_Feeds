@@ -1,8 +1,8 @@
 
-import User, { IUser } from '../models/User';
+import User, { IUser } from '../models/User.js';
 import { IUserRepository, IUserProfile, IProfileUpdateData, IPasswordResetData } from '../interface/IUser'
-import { ICategory } from '../interface/ICategory';
-import Category from '../models/Category';
+import { ICategory } from '../interface/ICategory.js';
+import Category from '../models/Category.js';
 import bcrypt from 'bcryptjs'
 export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<IUserProfile | null> {

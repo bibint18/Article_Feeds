@@ -1,5 +1,5 @@
 
-import { UserRepository } from '../repositories/userRepository';
+import { UserRepository } from '../repositories/userRepository.js';
 import { IUserRepository, IUserProfile, IProfileUpdateData, IUserService, IPasswordResetData } from '../interface/IUser';
 import { ICategory } from '../interface/ICategory';
 

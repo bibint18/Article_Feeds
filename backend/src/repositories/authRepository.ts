@@ -1,6 +1,6 @@
-import { IAuthRepository } from '../interface/IAuthRepository';
-import User, { IUser } from '../models/User';
-import Category, { ICategory } from '../models/Category';
+import { IAuthRepository } from '../interface/IAuthRepository.js';
+import User, { IUser } from '../models/User.js';
+import Category, { ICategory } from '../models/Category.js';
 
 export class AuthRepository implements IAuthRepository {
   async findCategoryByName(name: string): Promise<ICategory | null> {

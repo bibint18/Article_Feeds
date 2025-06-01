@@ -1,5 +1,5 @@
-import { IArticle } from "../models/Article";
-import { ICategory } from "./ICategory";
+import { IArticle } from "../models/Article.js";
+import { ICategory } from "./ICategory.js";
 
 export interface IArticleRepository {
   findByUserPreferences(

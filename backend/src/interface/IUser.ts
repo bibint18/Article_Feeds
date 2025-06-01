@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { ICategory } from './ICategory';
+import { ICategory } from './ICategory.js';
 
 export interface IUser extends Document {
   firstName: string;

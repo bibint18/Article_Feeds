@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { generateSignature } from '../services/cloudinary';
+import { generateSignature } from '../services/cloudinary.js';
 
 export class CloudinaryController {
   async getSignature(req: Request, res: Response): Promise<void> {

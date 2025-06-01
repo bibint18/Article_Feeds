@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { IArticleController } from "../interface/IArticleController";
-import { ArticleService } from "../services/articleService";
+import { IArticleController } from "../interface/IArticleController.js";
+import { ArticleService } from "../services/articleService.js";
 
 interface AuthRequest extends Request {
   user?: { id: string };

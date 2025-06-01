@@ -1,7 +1,7 @@
 
 import { Request, Response } from 'express';
-import { UserService } from '../services/userService';
-import { IUserController, IProfileUpdateData, IPasswordResetData } from '../interface/IUser'
+import { UserService } from '../services/userService.js';
+import { IUserController, IProfileUpdateData, IPasswordResetData } from '../interface/IUser.js'
 
 interface AuthRequest extends Request {
   user?: { id: string };
