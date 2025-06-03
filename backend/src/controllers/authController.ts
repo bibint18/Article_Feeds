@@ -49,4 +49,14 @@ export class AuthController implements IAuthController {
       res.status(400).json({ message: error.message });
     }
   }
+
+  async refresh(req: Request, res: Response): Promise<void> {
+    try {
+      const { refreshToken } = req.body;
+      const { accessToken } = await this.authService.refresh({ refreshToken });
+      res.status(200).json({ data: { accessToken } });
+    } catch (error: any) {
+      res.status(401).json({ message: error.message });
+    }
+  }
 }

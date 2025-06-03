@@ -1,4 +1,4 @@
-import { IAuthService,LoginRequest,RegisterRequest } from '../interface/IAuthService.js';
+import { IAuthService,LoginRequest,RefreshRequest,RegisterRequest } from '../interface/IAuthService.js';
 import { IAuthRepository } from '../interface/IAuthRepository.js';
 import { AuthRepository } from '../repositories/authRepository.js';
 import { generateOtp, sendOtpEmail } from '../utils/otpGenerator.js';
@@ -110,7 +110,7 @@ export class AuthService implements IAuthService {
     const accessToken = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET || 'access-secret',
-      { expiresIn: '15m' }
+      { expiresIn: '10m' }
     );
 
     const refreshToken = jwt.sign(
@@ -129,5 +129,27 @@ export class AuthService implements IAuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async refresh(data: RefreshRequest): Promise<{ accessToken: string }> {
+    console.log("generate refresh")
+    const { refreshToken } = data;
+    let decoded: any;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'refresh-secret');
+    } catch (error) {
+      throw new Error('Invalid refresh token');
+    }
+    const user = await this.repository.findUserByEmail(decoded.email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const accessToken = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET || 'access-secret',
+      { expiresIn: '15m' }
+    );
+
+    return { accessToken };
   }
 }

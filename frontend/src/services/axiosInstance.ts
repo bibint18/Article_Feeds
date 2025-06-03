@@ -1,32 +1,3 @@
-// import axios, { AxiosInstance } from 'axios';
-
-// const axiosInstance: AxiosInstance = axios.create({
-//   baseURL: import.meta.env.VITE_API_URL,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     // Add any request headers or logic here
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
-
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     // Handle errors globally
-//     console.error('API error:', error.response?.data || error.message);
-//     return Promise.reject(error);
-//   }
-// );
-
-// export default axiosInstance;
-
-
 
 import axios, { type AxiosInstance, AxiosError } from 'axios';
 import { store } from '../redux/store';
@@ -38,8 +9,6 @@ const axiosInstance: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-// Request interceptor to add access token
 axiosInstance.interceptors.request.use(
   (config) => {
     const state = store.getState();

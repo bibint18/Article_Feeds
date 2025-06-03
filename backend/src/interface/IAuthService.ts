@@ -10,6 +10,9 @@ export interface RegisterRequest {
   confirmPassword: string;
   articlePreferences: string[];
 }
+export interface RefreshRequest {
+  refreshToken: string;
+}
 
 export interface LoginRequest {
   email: string;
