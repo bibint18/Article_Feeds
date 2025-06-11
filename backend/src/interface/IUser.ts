@@ -49,8 +49,8 @@ export interface IUserService {
 }
 
 export interface IUserController {
-  getProfile(req: any, res: any): Promise<void>;
-  updateProfile(req: any, res: any): Promise<void>;
-  getCategories(req:any,res:any):Promise<void>
-  resetPassword(req: any, res: any): Promise<void>;
+  getProfile(req: any, res: any,next:any): Promise<void>;
+  updateProfile(req: any, res: any,next:any): Promise<void>;
+  getCategories(req:any,res:any,next:any):Promise<void>
+  resetPassword(req: any, res: any,next:any): Promise<void>;
 }

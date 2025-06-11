@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IArticleController } from "../interface/IArticleController.js";
 import { ArticleService } from "../services/articleService.js";
 
@@ -12,7 +12,7 @@ export class ArticleController implements IArticleController {
     this.articleService = new ArticleService();
   }
 
-  async getArticles(req: AuthRequest, res: Response): Promise<void> {
+  async getArticles(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
       const userId = req.user?.id as string;
       const { preferences, page = 1, limit = 9, search = "" } = req.body;
@@ -29,13 +29,14 @@ export class ArticleController implements IArticleController {
         .status(200)
         .json({ articles, total, page: Number(page), limit: Number(limit) });
     } catch (error: any) {
-      res
-        .status(401)
-        .json({ message: "Invalid token or error fetching articles" });
+      next(error)
+      // res
+      //   .status(401)
+      //   .json({ message: "Invalid token or error fetching articles" });
     }
   }
 
-  async createArticle(req: AuthRequest, res: Response): Promise<void> {
+  async createArticle(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
       const userId = req.user?.id as string;
       const article = await this.articleService.createArticle(userId, req.body);
@@ -44,11 +45,12 @@ export class ArticleController implements IArticleController {
         .status(201)
         .json({ message: "Article created successfully", article });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      // res.status(400).json({ message: error.message });
+      next(error)
     }
   }
 
-  async interactWithArticle(req: AuthRequest, res: Response): Promise<void> {
+  async interactWithArticle(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
 const userId=req.user?.id as string
       const { articleId, action } = req.body;
@@ -59,11 +61,12 @@ const userId=req.user?.id as string
       );
       res.status(200).json({ message: `${action} successful`, article });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      next(error)
+      // res.status(400).json({ message: error.message });
     }
   }
 
-  async getMyArticles(req: AuthRequest, res: Response): Promise<void> {
+  async getMyArticles(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
 const userId=req.user?.id as string
       const { page = 1, limit = 9, search = "" } = req.body;
@@ -77,13 +80,14 @@ const userId=req.user?.id as string
         .status(200)
         .json({ articles, total, page: Number(page), limit: Number(limit) });
     } catch (error: any) {
-      res
-        .status(401)
-        .json({ message: "Invalid token or error fetching articles" });
+      next(error)
+      // res
+      //   .status(401)
+      //   .json({ message: "Invalid token or error fetching articles" });
     }
   }
 
-  async updateArticle(req: AuthRequest, res: Response): Promise<void> {
+  async updateArticle(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
 const userId=req.user?.id as string
       const { id } = req.params;
@@ -96,18 +100,20 @@ const userId=req.user?.id as string
         .status(200)
         .json({ message: "Article updated successfully", article });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      next(error)
+      // res.status(400).json({ message: error.message });
     }
   }
 
-  async deleteArticle(req: AuthRequest, res: Response): Promise<void> {
+  async deleteArticle(req: AuthRequest, res: Response,next:NextFunction): Promise<void> {
     try {
 const userId=req.user?.id as string
       const { id } = req.params;
       await this.articleService.deleteArticle(id, userId);
       res.status(200).json({ message: "Article deleted successfully" });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      next(error)
+      // res.status(400).json({ message: error.message });
     }
   }
 }
